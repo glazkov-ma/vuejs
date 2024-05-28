@@ -6,30 +6,55 @@
     <button v-if="city != ''" @click="getWeather()">Get weather</button>
     <button disabled v-else>Input city name</button>
     <p class="error">{{ error }}</p>
+
+    <div v-if="info != null">
+      <p>{{ showTemp }}</p>
+      <p>{{ showFeelsLike }}</p>
+      <p>{{ showMinTemp }}</p>
+      <p>{{ showMaxTemp }}</p>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       city: "",
-      error: ""
+      error: "",
+      info: null
     }
   },
   computed: {
     cityName() {
       return '«' + this.city + '»'
+    },
+    showTemp() {
+      return "Temperature: " + this.info.main.temp
+    },
+    showFeelsLike() {
+      return "Feels like: " + this.info.main.feels_like
+    },
+    showMinTemp() {
+      return "Min temperature: " + this.info.main.temp_min
+    },
+    showMaxTemp() {
+      return "Max temperature: " + this.info.main.temp_max
     }
   },
   methods: {
     getWeather() {
       if (this.city.trim().length < 2) {
         this.error = "Need one to enter more than one character"
-        return false;
+        return false
       }
 
-      this.error = '';
+      this.error = ''
+
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=476906220888943901542ea980772d0b`)
+      .then(res => (this.info = res.data))
     }
   }
 }
