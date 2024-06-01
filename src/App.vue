@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <h1>Weather app</h1>
-    <p>Check weather in {{ city == '' ? "your city" : cityName }}</p>
-    <input type="text" v-model="city" placeholder="Input city">
+    <p>Check weather in {{ city == "" ? "your city" : cityName }}</p>
+    <input type="text" v-model="city" placeholder="Input city" />
     <button v-if="city != ''" @click="getWeather()">Get weather</button>
     <button disabled v-else>Input city name</button>
     <p class="error">{{ error }}</p>
@@ -17,47 +17,55 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       city: "",
       error: "",
-      info: null
-    }
+      info: null,
+    };
   },
   computed: {
     cityName() {
-      return '«' + this.city + '»'
+      return "«" + this.city + "»";
     },
     showTemp() {
-      return "Temperature: " + this.info.main.temp
+      return "Temperature: " + this.info.main.temp;
     },
     showFeelsLike() {
-      return "Feels like: " + this.info.main.feels_like
+      return "Feels like: " + this.info.main.feels_like;
     },
     showMinTemp() {
-      return "Min temperature: " + this.info.main.temp_min
+      return "Min temperature: " + this.info.main.temp_min;
     },
     showMaxTemp() {
-      return "Max temperature: " + this.info.main.temp_max
-    }
+      return "Max temperature: " + this.info.main.temp_max;
+    },
   },
   methods: {
     getWeather() {
       if (this.city.trim().length < 2) {
-        this.error = "Need one to enter more than one character"
-        return false
+        this.error = "Need one to enter more than one character";
+        return false;
       }
 
-      this.error = ''
+      this.error = "";
 
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=476906220888943901542ea980772d0b`)
-      .then(res => (this.info = res.data))
-    }
-  }
-}
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=476906220888943901542ea980772d0b`
+        )
+        .then((res) => (this.info = res.data))
+        .catch((e) => {
+          console.log(e);
+          // this.error = e.message;
+          this.error = e.response.data.message;
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
