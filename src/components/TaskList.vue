@@ -1,23 +1,41 @@
 <template>
-	<div class="task" v-for="(el, index) in taskListArr" :key="index">
+	<div class="task" v-for="el in taskListArr" :key="el.id">
 		<span :class="{ completed: el.completed }">{{ el.name }}</span>
 		<div class="actions">
-			<button class="action-button" @click="removeTask(index)">
+			<button class="action-button" @click="removeTask(el.id)">
 				<font-awesome-icon class="fa-icon trash-alt" icon="trash-alt" />
 			</button>
-			<button class="action-button" @click="editTask(index)">
+			<button class="action-button" @click="editTask(el.id)">
 				<font-awesome-icon class="fa-icon edit" icon="edit" />
 			</button>
-			<button class="action-button" @click="completeTask(index)">
-				<font-awesome-icon class="fa-icon check" icon="check" />
+			<button class="action-button" @click="completeTask(el.id)">
+				<font-awesome-icon
+					class="fa-icon"
+					:class="el.completed ? 'xmark' : 'check'"
+					:icon="el.completed ? 'xmark' : 'check'"
+				/>
 			</button>
 		</div>
 	</div>
 </template>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {
+	faTrashAlt,
+	faEdit,
+	faCheck,
+	faXmark,
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faTrashAlt, faEdit, faCheck, faXmark)
+
 export default {
 	name: 'TaskList',
+	components: {
+		FontAwesomeIcon,
+	},
 	props: {
 		taskListArr: {
 			type: Array,
@@ -91,6 +109,10 @@ export default {
 
 .fa-icon.check {
 	color: #00770a;
+}
+
+.fa-icon.xmark {
+	color: #770000;
 }
 
 .completed {

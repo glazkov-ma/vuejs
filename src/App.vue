@@ -32,6 +32,7 @@ export default {
 			taskInputValue: '',
 			taskListArr: [],
 			editableTaskIndex: -1,
+			currentTaskId: -1,
 		}
 	},
 	methods: {
@@ -39,7 +40,9 @@ export default {
 			this.taskInputValue = val
 		},
 		addTask() {
+			this.currentTaskId++
 			const newTask = {
+				id: this.currentTaskId,
 				name: this.taskInputValue,
 				completed: false,
 			}
@@ -48,24 +51,30 @@ export default {
 		},
 		removeTask(index) {
 			if (this.editableTaskIndex != index) {
-				this.taskListArr.splice(index, 1)
+				this.taskListArr = this.taskListArr.filter(task => task.id !== index)
 			}
 		},
 		editTask(index) {
-			this.taskInputValue = this.taskListArr[index].name
+			const task = this.getTaskById(index)
+			this.taskInputValue = task.name
 			this.editableTaskIndex = index
 		},
 		saveTask(index) {
-			this.taskListArr[index].name = this.taskInputValue
+			const task = this.getTaskById(index)
+			task.name = this.taskInputValue
 			this.taskInputValue = ''
 			this.editableTaskIndex = -1
 		},
 		completeTask(index) {
-			if (!this.taskListArr[index]['completed']) {
-				this.taskListArr[index]['completed'] = true
+			const task = this.getTaskById(index)
+			if (!task.completed) {
+				task.completed = true
 			} else {
-				this.taskListArr[index]['completed'] = false
+				task.completed = false
 			}
+		},
+		getTaskById(id) {
+			return this.taskListArr.find(task => task.id === id)
 		},
 	},
 }
