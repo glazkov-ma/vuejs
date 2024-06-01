@@ -50,7 +50,7 @@ export default {
 			this.taskInputValue = ''
 		},
 		removeTask(index) {
-			if (this.editableTaskIndex != index) {
+			if (this.editableTaskIndex !== index) {
 				this.taskListArr = this.taskListArr.filter(task => task.id !== index)
 			}
 		},
@@ -67,11 +67,7 @@ export default {
 		},
 		completeTask(index) {
 			const task = this.getTaskById(index)
-			if (!task.completed) {
-				task.completed = true
-			} else {
-				task.completed = false
-			}
+			task.completed = !task.completed
 		},
 		getTaskById(id) {
 			return this.taskListArr.find(task => task.id === id)
